@@ -2,9 +2,9 @@ import React from 'react'
 
 const Header = (props) => {
   return (
-    <>
+    <div>
       <h1> {props.course} </h1>
-    </>
+    </div>
   )
 }
 
@@ -18,19 +18,19 @@ const Part = (props) => {
 
 const Content = (props) => {
   return (
-    <>
+    <div>
       <Part part={props.part1} exercises={props.exercises1} />
       <Part part={props.part2} exercises={props.exercises2} />
       <Part part={props.part3} exercises={props.exercises3} />
-    </>
+    </div>
   )
 }
 
 const Total = (props) => {
   return(
-    <>
+    <div>
       <p>Number of exercises {props.exercises1 + props.exercises2 + props.exercises3}</p>
-    </>
+    </div>
   )
 }
 
