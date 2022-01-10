@@ -1,7 +1,6 @@
 import React from 'react'
 import Course from './components/Course.js'
 
-
 const App = () => {
   const courses = [
     {
@@ -49,6 +48,7 @@ const App = () => {
   ]
 
   const result = courses.map(course => <Course key={course.id} course={course} />)
+  
   return (
     <div>
       {result}
