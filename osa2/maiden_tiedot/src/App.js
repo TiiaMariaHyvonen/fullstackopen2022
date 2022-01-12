@@ -4,6 +4,8 @@ import Countries from './components/Countries.js'
 
 
 
+
+
 const App = () => {
 
   const [countries, setCountries] = useState([])
@@ -22,8 +24,7 @@ const App = () => {
     setFilter(event.target.value)
   }
 
-  const filtered = countries.filter(country => country.name.common.toLowerCase().includes(newFilter.toLowerCase()))
-  
+  const filteredCountries = countries.filter(country => country.name.common.toLowerCase().includes(newFilter.toLowerCase()))
 
   return (
     <div>
@@ -32,7 +33,7 @@ const App = () => {
         value={newFilter}
         onChange={handleFilterChange}/>
       </div>
-      <Countries countries={filtered}/>
+      <Countries countries={filteredCountries} setFilter={setFilter}/>
     </div>
   )
 }

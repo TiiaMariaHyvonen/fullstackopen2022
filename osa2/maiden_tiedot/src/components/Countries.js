@@ -1,4 +1,5 @@
 const Country = ({country}) => {
+
     const languages = Object.values(country.languages).map(language=> <li key={language}> {language}</li>)
     return (
       <>
@@ -10,11 +11,20 @@ const Country = ({country}) => {
         <p>{country.flag}</p>
       </>
     )
-  
   }
   
-  const Countries = ({countries}) => {
-    const countriesToShow = countries.map(country => <li key={country.name.common}> {country.name.common} </li>)
+
+  const Countries = ({countries, setFilter}) => {
+
+    const countriesToShow = countries.map(country => 
+      <li key={country.name.common}> 
+        {country.name.common} 
+        <button onClick={() => setFilter(country.name.common)}>
+          show
+        </button>
+      </li>
+    )
+  
     const length = countries.length
     if (length > 10) {
       return ( 
@@ -35,5 +45,6 @@ const Country = ({country}) => {
       </ul>
     )
   }
+
 
   export default Countries
