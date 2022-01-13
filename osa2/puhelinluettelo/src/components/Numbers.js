@@ -1,11 +1,11 @@
-const Number = ({person}) => {
+const Number = ({person, handleDelete}) => {
   return (
     <> 
-      <li> {person.name} {person.number ? person.number : '' } </li>
+      <li> {person.name} {person.number ? person.number : '' } <button onClick={handleDelete}>delete</button> </li>
     </>
   )
 }
-
+/*
 const Numbers = ({persons}) => {
   return (
     <ul>
@@ -13,6 +13,6 @@ const Numbers = ({persons}) => {
     </ul>
   )
 }
+*/
 
-
-export default Numbers
+export default Number

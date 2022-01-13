@@ -1,8 +1,7 @@
  import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons.js'
 
-import Numbers from './components/Numbers.js'
+import Number from './components/Numbers.js'
 import Filter from './components/Filter.js'
 import Submit from './components/Submit.js'
 
@@ -15,7 +14,6 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setFilter] = useState('')
 
-  //This happens in the beginnig: data is retrieved from the server
   useEffect(() => {
     personService
     .getAll()
@@ -24,8 +22,6 @@ const App = () => {
     })
   }, [])
 
-  //This happens when a new phone contact is added: new object is sent to server, it is added to
-  //the state and name and number fields are emptied
   const addNumber = (event) => {
     event.preventDefault()
     if(persons.map(person => person.name).includes(newName)) {
@@ -60,6 +56,20 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const handleDelete = (id) => {
+    console.log("The id ", id)
+    const person = persons.find(p => p.id === id)
+    console.log(person)
+    if (window.confirm(`Delete ${person.name} ?`)){
+      personService
+      .remove(id)
+      .then(returnedPerson => {
+        console.log("delete returns", returnedPerson)
+        setPersons(persons.filter(person => person.id != id))
+      })
+    }
+  }
+
   const personsToShow = persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
 
   return (
@@ -71,7 +81,9 @@ const App = () => {
       <Submit addNumber={addNumber} newName={newName} handleNameChange={handleNameChange} newNumber={newNumber} handleNumberChange={handleNumberChange}/>
 
       <h2>Numbers</h2>
-      <Numbers persons={personsToShow} />
+      <ul>
+        {personsToShow.map(person => <Number key={person.name} person={person} handleDelete={() => handleDelete(person.id)}/>)}
+      </ul>
     </div>
   )
 
