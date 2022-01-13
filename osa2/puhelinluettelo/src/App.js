@@ -1,11 +1,8 @@
- import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import personService from './services/persons.js'
-
 import Number from './components/Numbers.js'
 import Filter from './components/Filter.js'
 import Submit from './components/Submit.js'
-
-
 
 const App = () => {
   
@@ -25,18 +22,26 @@ const App = () => {
   const addNumber = (event) => {
     event.preventDefault()
     if(persons.map(person => person.name).includes(newName)) {
-      window.alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook, replace the number with a new one?`)){
+        const person = persons.find(p => p.name === newName)
+        const changedPerson = { ...person, number: newNumber}
+        personService
+        .update(changedPerson.id, changedPerson)
+        .then(returnedPerson => {
+          setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
+          setNewName('')
+          setNewNumber('')
+        })
+      }
     }
     else {
       const personObject = {
         name: newName,
         number: newNumber
       }
-      console.log(personObject)
       personService
       .create(personObject)
       .then(returnedPerson => {
-        console.log("returnedPerson", returnedPerson)
         setPersons(persons.concat(returnedPerson))
         setNewName('')
         setNewNumber('')
@@ -57,16 +62,13 @@ const App = () => {
   }
 
   const handleDelete = (id) => {
-    console.log("The id ", id)
     const person = persons.find(p => p.id === id)
-    console.log(person)
     if (window.confirm(`Delete ${person.name} ?`)){
       personService
       .remove(id)
-      .then(returnedPerson => {
-        console.log("delete returns", returnedPerson)
+      .then(
         setPersons(persons.filter(person => person.id != id))
-      })
+      )
     }
   }
 
