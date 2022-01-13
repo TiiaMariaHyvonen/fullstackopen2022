@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons.js'
 
 import Numbers from './components/Numbers.js'
 import Filter from './components/Filter.js'
@@ -14,24 +15,36 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setFilter] = useState('')
 
+  //This happens in the beginnig: data is retrieved from the server
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
+    personService
+    .getAll()
+      .then(initialPersons => {
+      setPersons(initialPersons)
+    })
   }, [])
 
+  //This happens when a new phone contact is added: new object is sent to server, it is added to
+  //the state and name and number fields are emptied
   const addNumber = (event) => {
     event.preventDefault()
     if(persons.map(person => person.name).includes(newName)) {
       window.alert(`${newName} is already added to phonebook`)
     }
     else {
-      setPersons(persons.concat({name: newName, number: newNumber}))
-      setNewName('')
-      setNewNumber('')
+      const personObject = {
+        name: newName,
+        number: newNumber
+      }
+      console.log(personObject)
+      personService
+      .create(personObject)
+      .then(returnedPerson => {
+        console.log("returnedPerson", returnedPerson)
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
     }
   }
   
