@@ -3,18 +3,9 @@ import personService from './services/persons.js'
 import Number from './components/Numbers.js'
 import Filter from './components/Filter.js'
 import Submit from './components/Submit.js'
+import Notification from './components/Notification.js'
 
-const Notification = ({ message }) => {
-  if (message === null) {
-    return null
-  }
 
-  return (
-    <div className="message">
-      {message}
-    </div>
-  )
-}
 
 const App = () => {
   
@@ -23,6 +14,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [newFilter, setFilter] = useState('')
   const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService
@@ -46,6 +38,15 @@ const App = () => {
           setPersons(persons.map(person => person.id !== changedPerson.id ? person : returnedPerson))
           setNewName('')
           setNewNumber('')
+        })
+        .catch(error => {
+          setErrorMessage(
+            `Number '${person.name}' was already removed from server`
+          )
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+          
         })
       }
     }
@@ -87,8 +88,14 @@ const App = () => {
         setMessage(`Deleted' ${person.name}'`)
         setTimeout(() => {setMessage(null)}, 5000)
         setPersons(persons.filter(person => person.id != id))
-      }
-      )
+      })
+      .catch(error => {
+        setErrorMessage(
+          `Number '${person.name}' was already removed from server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)})
     }
   }
 
@@ -97,7 +104,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={message} />
+      <Notification message={message} className="message" />
+      <Notification message={errorMessage} className="error"/>
       <Filter newFilter={newFilter} handleFilterChange={handleFilterChange}/>
 
       <h2>Add a new</h2>
